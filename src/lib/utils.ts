@@ -9,7 +9,7 @@ export function formatContact(contact:string):string{
     return contact.replace(/(\d{3})(\d{3})(\d{4})/,'($1) $2-$3')
 }
 
-export function getImageUrl(imagePath:string | null):string{
+export function getImageUrl(imagePath:string |undefined):string{
     if(!imagePath) return '/placeholder-school.jpg'
     return `/schoolImages/${imagePath}`
 }
