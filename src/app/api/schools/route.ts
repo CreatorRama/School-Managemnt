@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     
-    
+    // Extract form fields
     const data = {
       name: formData.get('name') as string,
       address: formData.get('address') as string,
@@ -35,34 +35,55 @@ export async function POST(request: NextRequest) {
       email_id: formData.get('email_id') as string,
     }
 
-    
+    // Validate data
     const validatedData = schoolSchema.parse(data)
 
     
     let imagePath: string | null = null
     const imageFile = formData.get('image') as File | null
     
+   
+    
     if (imageFile && imageFile.size > 0) {
-      
-      const uploadDir = join(process.cwd(), 'public', 'schoolImages')
-      await mkdir(uploadDir, { recursive: true })
-
-      // Generate unique filename
-      const timestamp = Date.now()
-      const fileName = `school_${timestamp}.webp`
-      const filePath = join(uploadDir, fileName)
-
      
-      const buffer = Buffer.from(await imageFile.arrayBuffer())
-      await sharp(buffer)
-        .resize(800, 600, { fit: 'cover' })
-        .webp({ quality: 80 })
-        .toFile(filePath)
+      const uploadDir = join(process.cwd(), 'public', 'schoolImages')
+      
+      
+      try {
+        await mkdir(uploadDir, { recursive: true })
+        console.log('✅ Directory created/exists')
+      } catch (dirError) {
+        console.error('❌ Error creating directory:', dirError)
+      }
 
-      imagePath = fileName
+      
+      const timestamp = Date.now()
+      const originalName = imageFile.name.split('.')[0]
+      const fileName = `school_${timestamp}_${originalName}.webp`
+      const filePath = join(uploadDir, fileName)
+      
+      console.log('💾 Saving image to:', filePath)
+
+      try {
+        
+        const buffer = Buffer.from(await imageFile.arrayBuffer())
+        
+        
+        await sharp(buffer)
+          .resize(800, 600, { fit: 'cover' })
+          .webp({ quality: 80 })
+          .toFile(filePath)
+        
+        console.log('✅ Image saved successfully:', fileName)
+        imagePath = fileName
+      } catch (imageError) {
+        throw imageError
+      }
+    } else {
+      console.log(' No valid image file to process')
     }
 
-    
+    // Save to database
     const school = await prisma.school.create({
       data: {
         ...validatedData,
@@ -70,9 +91,11 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    
+
     return NextResponse.json(school, { status: 201 })
   } catch (error) {
-    console.error('Error creating school:', error)
+    
     
     if (error instanceof Error) {
       return NextResponse.json(
