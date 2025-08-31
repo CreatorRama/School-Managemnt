@@ -1,10 +1,19 @@
 import { prisma } from '@/lib/prisma'
-import SchoolGrid from '@/components/SchoolGrid'
+import SchoolsClient from './SchoolsClient'
+import { School } from '@/types/school'
 
 export default async function SchoolsPage() {
   const schools = await prisma.school.findMany({
     orderBy: { createdAt: 'desc' }
   })
+
+  
+  const cities: string[] = Array.from(
+    new Set(
+      schools
+        .map((school: School) => school.city)
+        .filter((city: string | null | undefined): city is string => typeof city === "string") 
+  )).sort()
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -14,7 +23,7 @@ export default async function SchoolsPage() {
           Browse through our collection of {schools.length} schools
         </p>
       </div>
-      <SchoolGrid schools={schools} />
+      <SchoolsClient schools={schools} cities={cities} />
     </div>
   )
 }
