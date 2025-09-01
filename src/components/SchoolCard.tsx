@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/Card'
-import { getImageUrl, formatContact } from '@/lib/utils'
+import {  formatContact } from '@/lib/utils'
 import type { School } from '@/types/school'
 
 interface SchoolCardProps {
