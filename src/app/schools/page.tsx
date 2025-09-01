@@ -1,9 +1,8 @@
-import { prisma } from '@/lib/prisma'
 import SchoolsClient from './SchoolsClient'
 import { School } from '@/types/school'
 
 export default async function SchoolsPage() {
-   const res = await fetch("/api/schools")
+   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/schools`)
 
   const schoolsData=await res.json()
   const schools: School[] = schoolsData.map((school:School) => ({
