@@ -1,21 +1,25 @@
+import { prisma } from '@/lib/prisma' 
 import SchoolsClient from './SchoolsClient'
 import { School } from '@/types/school'
 
 export default async function SchoolsPage() {
-   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/schools`)
+  
+  const schools = await prisma.school.findMany({
+    orderBy: { createdAt: 'desc' }
+  })
 
-  const schoolsData=await res.json()
-  const schools: School[] = schoolsData.map((school:School) => ({
+  const schoolsWithImages: School[] = schools.map((school) => ({
     ...school,
     image: school.image || undefined 
   }))
 
   const cities: string[] = Array.from(
     new Set(
-      schools
-        .map((school: School) => school.city)
-        .filter((city: string | null | undefined): city is string => typeof city === "string") 
-  )).sort()
+      schoolsWithImages
+        .map((school) => school.city)
+        .filter((city): city is string => typeof city === "string") 
+    )
+  ).sort()
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -25,7 +29,7 @@ export default async function SchoolsPage() {
           Browse through our collection of {schools.length} schools
         </p>
       </div>
-      <SchoolsClient schools={schools} cities={cities} />
+      <SchoolsClient schools={schoolsWithImages} cities={cities} />
     </div>
   )
 }
