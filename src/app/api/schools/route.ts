@@ -6,9 +6,7 @@ import { put } from '@vercel/blob'
 
 export async function GET() {
   try {
-    const schools = await prisma.school.findMany({
-      orderBy: { createdAt: 'desc' }
-    })
+    const schools = await fetch("/api/schools")
     
     return NextResponse.json(schools)
   } catch (error) {

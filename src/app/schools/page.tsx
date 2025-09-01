@@ -3,12 +3,10 @@ import SchoolsClient from './SchoolsClient'
 import { School } from '@/types/school'
 
 export default async function SchoolsPage() {
-  const schoolsData = await prisma.school.findMany({
-    orderBy: { createdAt: 'desc' }
-  })
+   const res = await fetch("/api/schools")
 
-  
-  const schools: School[] = schoolsData.map(school => ({
+  const schoolsData=await res.json()
+  const schools: School[] = schoolsData.map((school:School) => ({
     ...school,
     image: school.image || undefined 
   }))
