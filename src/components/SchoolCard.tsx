@@ -12,7 +12,7 @@ export default function SchoolCard({ school }: SchoolCardProps) {
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="relative h-48 w-full">
         <Image
-          src={getImageUrl(school.image as string)}
+          src={school.image as string}
           alt={school.name}
           fill
           className="object-cover"
