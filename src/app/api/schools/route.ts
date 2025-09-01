@@ -70,7 +70,8 @@ export async function POST(request: NextRequest) {
         
       }
     } else {
-      console.log('ℹ️ No valid image file to process')
+      console.log(' No valid image file to process')
+      
     }
 
     

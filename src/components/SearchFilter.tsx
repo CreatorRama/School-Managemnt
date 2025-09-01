@@ -15,7 +15,6 @@ export default function SearchFilter({
   onCityFilter, 
   cities, 
   searchSuggestions = [],
-  currentQuery = ''
 }: SearchFilterProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCity, setSelectedCity] = useState('')
