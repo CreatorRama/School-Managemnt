@@ -12,6 +12,7 @@
     "@hookform/resolvers": "^5.2.1",
     "@prisma/client": "^6.15.0",
     "@types/multer": "^2.0.0",
+    "@vercel/blob": "^1.1.1",
     "clsx": "^2.1.1",
     "multer": "^2.0.2",
     "next": "15.5.2",
